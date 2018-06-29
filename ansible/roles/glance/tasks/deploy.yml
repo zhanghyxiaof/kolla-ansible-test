@@ -1,0 +1,21 @@
+---
+- include: register.yml
+  when: inventory_hostname in groups['glance-api']
+
+- include: config.yml
+
+- include: clone.yml
+  when:
+    - glance_dev_mode | bool
+    - inventory_hostname in groups['glance-api'] or
+      inventory_hostname in groups['glance-registry']
+
+- include: bootstrap.yml
+  when: inventory_hostname in groups['glance-api']
+
+- name: Flush handlers
+  meta: flush_handlers
+
+- include: check.yml
+  when: inventory_hostname in groups['glance-api'] or
+        inventory_hostname in groups['glance-registry']

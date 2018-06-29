@@ -1,0 +1,19 @@
+---
+- include: config.yml
+
+- include: clone.yml
+  when:
+    - keystone_dev_mode | bool
+
+- include: bootstrap.yml
+
+- name: Flush handlers
+  meta: flush_handlers
+
+- include: init_fernet.yml
+  when:
+    - keystone_token_provider == 'fernet'
+
+- include: register.yml
+
+- include: check.yml
